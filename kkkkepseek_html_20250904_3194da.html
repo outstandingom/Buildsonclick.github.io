@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealEstateHub - Property and Construction Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #2874f0;
+            color: white;
+            padding: 10px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .user-toggle {
+            display: flex;
+            background-color: white;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .user-toggle button {
+            border: none;
+            padding: 5px 10px;
+            background: none;
+            color: #2874f0;
+            cursor: pointer;
+        }
+
+        .user-toggle button.active {
+            background-color: #2874f0;
+            color: white;
+        }
+
+        .search-bar {
+            display: flex;
+            margin-bottom: 5px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .search-bar button {
+            padding: 8px 15px;
+            background-color: #fff;
+            color: #2874f0;
+            border: none;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+
+        /* Categories Navigation */
+        .categories {
+            display: flex;
+            overflow-x: auto;
+            background-color: white;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 60px;
+            z-index: 99;
+        }
+
+        .categories button {
+            flex: 0 0 auto;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .categories button.active {
+            color: #2874f0;
+            border-bottom: 2px solid #2874f0;
+        }
+
+        /* Marquee */
+        .marquee {
+            background-color: #ff9f00;
+            color: white;
+            padding: 5px 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 15px;
+        }
+
+        .main-content h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .item-card {
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-placeholder {
+            height: 120px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .item-details {
+            padding: 10px;
+        }
+
+        .item-details h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .item-details p {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .discount {
+            display: inline-block;
+            background-color: #e7f4e4;
+            color: #388e3c;
+            padding: 2px 5px;
+            border-radius: 2px;
+            font-size: 11px;
+            margin-right: 5px;
+        }
+
+        .rating {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .view-details {
+            width: 100%;
+            padding: 8px 0;
+            background-color: #2874f0;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        /* Footer Navigation */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-nav button {
+            flex: 1;
+            padding: 12px 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #555;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .category-content {
+            display: none;
+        }
+
+        .category-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo">RealEstateHub</div>
+                <div class="user-toggle">
+                    <button id="client-btn" class="active">Client</button>
+                    <button id="partner-btn">Partner</button>
+                </div>
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search for houses, engineers, materials..." />
+                <button>Search</button>
+            </div>
+        </header>
+
+        <!-- Navigation Categories -->
+        <nav class="categories">
+            <button data-category="houses" class="active">Houses</button>
+            <button data-category="engineers">Engineers</button>
+            <button data-category="architects">Architects</button>
+            <button data-category="materials">Materials</button>
+        </nav>
+
+        <!-- Promotional Marquee -->
+        <div class="marquee">
+            <marquee behavior="scroll" direction="left">
+                🏠 Special Offer: Get 5% discount on your first property booking! • 🛠️ Hire certified engineers at 15% off this month • 🎨 Free consultation with top architects • 🧱 Building materials at wholesale prices 
+            </marquee>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Houses Content -->
+            <div id="houses-content" class="category-content active">
+                <h2>Houses</h2>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-image">
+                            <div class="image-placeholder">🏠</div>
+                        </div>
+                        <div class="item-details">
+                            <h3>3BHK Villa</h3>
+                            <p>₹75,00,000</p>
+                            <p>Ratibad Rd, Bhopal</p>
+                            <span class="discount">5% off</span>
+                            <button class="view-details">View Details</button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-image">
+                            <div class="image-placeholder">🏠</div>
+                        </div>
+                        <div class="item-details">
+                            <h3>2BHK Apartment</h3>
+                            <p>₹45,00,000</p>
+                            <p>Sikandarabad, Bhopal</p>
+                            <span class="discount">3% off</span>
+                            <button class="view-details">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Engineers Content -->
+            <div id="engineers-content" class="category-content">
+                <h2>Engineers</h2>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-image">
+                            <div class="image-placeholder">👷</div>
+                        </div>
+                        <div class="item-details">
+                            <h3>Rajesh Kumar</h3>
+                            <p>15 years experience</p>
+                            <p>Structural Engineering</p>
+                            <span class="rating">⭐ 4.8</span>
+                            <button class="view-details">View Details</button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-image">
+                            <div class="image-placeholder">👷</div>
+                        </div>
+                        <div class="item-details">
+                            <h3>Sneha Patel</h3>
+                            <p>10 years experience</p>
+                            <p>Civil Engineering</p>
+                            <span class="rating">⭐ 4.7</span>
+                            <button class="view-details">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architects Content -->
+            <div id="architects-content" class="category-content">
+                <h2>Architects</h2>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-image">
+                            <div class="image-placeholder">📐</div>
+                        </div>
+                        <div class="item-details">
+                            <h3>Design Hub Architects</h3>
+                            <p>50+ projects</p>
+                            <p>Residential Designs</p>
+                            <span class="rating">⭐ 4.9</span>
+                            <button class="view-details">View Details</button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-image">
+                            <div class="image-placeholder">📐</div>
+                        </div>
+                        <div class="item-details">
+                            <h3>Modern Spaces</h3>
+                            <p>35+ projects</p>
+                            <p>Villa Designs</p>
+                            <span class="rating">⭐ 4.7</span>
+                            <button class="view-details">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Materials Content -->
+            <div id="materials-content" class="category-content">
+                <h2>Materials</h2>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-image">
+                            <div class="image-placeholder">🧱</div>
+                        </div>
+                        <div class="item-details">
+                            <h3>UltraTech Cement</h3>
+                            <p>₹410/bag</p>
+                            <p>High quality cement</p>
+                            <span class="discount">10% off</span>
+                            <button class="view-details">View Details</button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-image">
+                            <div class="image-placeholder">🧱</div>
+                        </div>
+                        <div class="item-details">
+                            <h3>Kajaria Tiles</h3>
+                            <p>₹95/sq.ft</p>
+                            <p>Premium tiles</p>
+                            <span class="discount">15% off</span>
+                            <button class="view-details">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Navigation -->
+        <footer class="footer-nav">
+            <button>Home</button>
+            <button>Explore</button>
+            <button>Account</button>
+            <button>Cart</button>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle between Client and Partner
+        document.getElementById('client-btn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('partner-btn').classList.remove('active');
+        });
+
+        document.getElementById('partner-btn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('client-btn').classList.remove('active');
+        });
+
+        // Category navigation
+        const categoryButtons = document.querySelectorAll('.categories button');
+        const categoryContents = document.querySelectorAll('.category-content');
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and contents
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                categoryContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const category = this.getAttribute('data-category');
+                document.getElementById(`${category}-content`).classList.add('active');
+            });
+        });
+
+        // Simulate view details button click
+        document.querySelectorAll('.view-details').forEach(button => {
+            button.addEventListener('click', function() {
+                alert('Details would be shown here in the full application!');
+            });
+        });
+    </script>
+</body>
+</html>
