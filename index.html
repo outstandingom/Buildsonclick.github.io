@@ -774,6 +774,51 @@
     </div>
 
     <script>
+        
+        // Speech synthesis (text → voice)
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = "hi-IN"; // Hindi voice
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        // Speech recognition (voice → text)
+        function listen(callback) {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Your browser doesn't support speech recognition. Please use Chrome or Edge.");
+                return;
+            }
+            
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "hi-IN"; // Hindi
+            recognition.onresult = function(event) {
+                const result = event.results[0][0].transcript;
+                callback(result);
+            };
+            recognition.start();
+        }
+
+        // Example functions
+        function startSearch() {
+            speak("आपको क्या सर्च करना है, वो बोलिए");
+            listen(function(result) {
+                alert("आपने कहा: " + result);
+                document.getElementById('search-input').value = result;
+                performSearch();
+            });
+        }
+
+        function openProfile() {
+            speak("आपकी प्रोफ़ाइल खुल रही है");
+            navigateTo('profile.html');
+        }
+
+        function openEngineering() {
+            speak("इंजीनियरिंग सेक्शन खुल रहा है");
+            document.querySelector('[data-category="engineers"]').click();
+        }
         // Initialize EmailJS
         emailjs.init("6SXFvxC9yntvDF-Ra");
         
@@ -1163,50 +1208,6 @@
             // window.location.href = page;
         }
 
-        // Speech synthesis (text → voice)
-        function speak(text) {
-            if ('speechSynthesis' in window) {
-                const msg = new SpeechSynthesisUtterance(text);
-                msg.lang = "hi-IN"; // Hindi voice
-                window.speechSynthesis.speak(msg);
-            }
-        }
-
-        // Speech recognition (voice → text)
-        function listen(callback) {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Your browser doesn't support speech recognition. Please use Chrome or Edge.");
-                return;
-            }
-            
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = "hi-IN"; // Hindi
-            recognition.onresult = function(event) {
-                const result = event.results[0][0].transcript;
-                callback(result);
-            };
-            recognition.start();
-        }
-
-        // Example functions
-        function startSearch() {
-            speak("आपको क्या सर्च करना है, वो बोलिए");
-            listen(function(result) {
-                alert("आपने कहा: " + result);
-                document.getElementById('search-input').value = result;
-                performSearch();
-            });
-        }
-
-        function openProfile() {
-            speak("आपकी प्रोफ़ाइल खुल रही है");
-            navigateTo('profile.html');
-        }
-
-        function openEngineering() {
-            speak("इंजीनियरिंग सेक्शन खुल रहा है");
-            document.querySelector('[data-category="engineers"]').click();
-        }
     </script>
 </body>
 </html>
