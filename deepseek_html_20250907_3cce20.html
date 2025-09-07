@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Builds on clicks- Premium Property Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+            color: #ffd700;
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(255, 215, 0, 0.1);
+            border-bottom: 1px solid #333;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            color: #ffd700;
+        }
+
+        .logo::before {
+            content: "🏠";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .user-toggle {
+            display: flex;
+            background-color: #1a1a1a;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+        }
+
+        .user-toggle button {
+            border: none;
+            padding: 7px 14px;
+            background: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .user-toggle button.active {
+            background-color: #ffd700;
+            color: #000;
+        }
+
+        .search-bar {
+            display: flex;
+            margin-bottom: 5px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 25px 0 0 25px;
+            font-size: 14px;
+            background: #1a1a1a;
+            color: #fff;
+            border: 1px solid #333;
+            border-right: none;
+        }
+
+        .search-bar button {
+            padding: 12px 18px;
+            background-color: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+            font-weight: bold;
+            border: 1px solid #ffd700;
+        }
+
+        /* Categories Navigation */
+        .categories {
+            display: flex;
+            overflow-x: auto;
+            background-color: #1a1a1a;
+            padding: 12px 0;
+            position: sticky;
+            top: 85px;
+            z-index: 99;
+            scrollbar-width: none;
+            border-bottom: 1px solid #333;
+        }
+
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .categories button {
+            flex: 0 0 auto;
+            padding: 8px 18px;
+            margin: 0 5px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #aaa;
+            font-weight: 500;
+            border-radius: 15px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            border: 1px solid #333;
+        }
+
+        .categories button.active {
+            color: #ffd700;
+            background-color: #333;
+            border-color: #ffd700;
+        }
+
+        /* Image Marquee Styles */
+        .scrolling-gallery {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            height: 150px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background: #000;
+            border: 1px solid #333;
+        }
+
+        .gallery-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            width: max-content;
+        }
+
+        .gallery-item {
+            height: 150px;
+            width: 200px;
+            flex-shrink: 0;
+            position: relative;
+            margin-right: 10px;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 15px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #ffd700;
+            font-size: 20px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #ffd700, transparent);
+            margin-left: 15px;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .item-card {
+            background: linear-gradient(145deg, #1a1a1a, #242424);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #333;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .item-image {
+            height: 130px;
+            background-color: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-details {
+            padding: 12px;
+        }
+
+        .item-details h3 {
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .item-details p {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .discount {
+            display: inline-block;
+            background-color: #333;
+            color: #ffd700;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .rating {
+            font-size: 11px;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .contact-btn {
+            flex: 1;
+            padding: 8px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .call-btn {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: white;
+        }
+
+        .message-btn {
+            background: linear-gradient(135deg, #ffd700, #ffb700);
+            color: #000;
+        }
+
+        .contact-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Footer Navigation */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            background-color: #1a1a1a;
+            border-top: 1px solid #333;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        .footer-nav button {
+            flex: 1;
+            padding: 12px 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #aaa;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s;
+        }
+
+        .footer-nav button:hover {
+            color: #ffd700;
+        }
+
+        .footer-nav button i {
+            font-size: 18px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-item {
+                width: 160px;
+            }
+        }
+
+        .category-content {
+            display: none;
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #ffd700;
+            grid-column: 1 / -1;
+        }
+
+        /* Decorative Elements */
+        .gold-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            margin: 15px 0;
+            width: 100%;
+        }
+
+        /* Voice Assistant Button */
+        .voice-assistant {
+            position: fixed;
+            bottom: 70px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ffb700);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            z-index: 99;
+            border: none;
+        }
+
+        .voice-assistant i {
+            font-size: 20px;
+        }
+
+        .voice-assistant.listening {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1a1a1a, #242424);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid #333;
+            box-shadow: 0 5px 25px rgba(255, 215, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffd700;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ffd700, #ffb700);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo">Builds on clicks</div>
+                <div class="user-toggle">
+                    <button id="client-btn" class="active">Client</button>
+                    <button id="partner-btn">Partner</button>
+                </div>
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search for houses, engineers, materials..." />
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </header>
+
+        <!-- Navigation Categories -->
+        <nav class="categories">
+            <button data-category="houses" class="active">Houses</button>
+            <button data-category="engineers">Engineers</button>
+            <button data-category="architects">Architects</button>
+            <button data-category="materials">Materials</button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Houses Content -->
+            <div id="houses-content" class="category-content active">
+                <h2 class="section-title">Premium Properties</h2>
+                
+                <!-- Houses Image Marquee -->
+                <section class="scrolling-gallery">
+                    <div class="gallery-track">
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Luxury Villa">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Modern Apartment">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600566753052-d7f2e5625f3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Countryside Home">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Beach House">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Luxury Interior">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Modern Kitchen">
+                        </div>
+                        <!-- Duplicates for seamless loop -->
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Luxury Villa">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Modern Apartment">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1600566753052-d7f2e5625f3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Countryside Home">
+                        </div>
+                    </div>
+                </section>
+                
+                <div class="gold-divider"></div>
+                
+                <div class="items-grid" id="houses-grid">
+                    <div class="loading">Loading premium properties...</div>
+                </div>
+            </div>
+
+            <!-- Engineers Content -->
+            <div id="engineers-content" class="category-content">
+                <h2 class="section-title">Expert Engineers</h2>
+                
+                <!-- Engineers Image Marquee -->
+                <section class="scrolling-gallery">
+                    <div class="gallery-track">
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Structural Engineer">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Civil Engineer">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Site Inspection">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Engineering Team">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Project Planning">
+                        </div>
+                        <!-- Duplicates for seamless loop -->
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Structural Engineer">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Civil Engineer">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Site Inspection">
+                        </div>
+                    </div>
+                </section>
+                
+                <div class="gold-divider"></div>
+                
+                <div class="items-grid" id="engineers-grid">
+                    <div class="loading">Loading engineering experts...</div>
+                </div>
+            </div>
+
+            <!-- Architects Content -->
+            <div id="architects-content" class="category-content">
+                <h2 class="section-title">Creative Architects</h2>
+                
+                <!-- Architects Image Marquee -->
+                <section class="scrolling-gallery">
+                    <div class="gallery-track">
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Architectural Design">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Architect Working">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Blueprints">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Architectural Model">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1531844251246-9a1bf779ae47?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Modern Architecture">
+                        </div>
+                        <!-- Duplicates for seamless loop -->
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Architectural Design">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Architect Working">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Blueprints">
+                        </div>
+                    </div>
+                </section>
+                
+                <div class="gold-divider"></div>
+                
+                <div class="items-grid" id="architects-grid">
+                    <div class="loading">Loading architectural experts...</div>
+                </div>
+            </div>
+
+            <!-- Materials Content -->
+            <div id="materials-content" class="category-content">
+                <h2 class="section-title">Quality Materials</h2>
+                
+                <!-- Materials Image Marquee -->
+                <section class="scrolling-gallery">
+                    <div class="gallery-track">
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1566041510639-8d95a2490bfb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Construction Materials">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cement Bags">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tiles">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1581837441865-eae1f7bcd4ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Paints">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1578116924785-cd3c9c869c78?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Steel">
+                        </div>
+                        <!-- Duplicates for seamless loop -->
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1566041510639-8d95a2490bfb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Construction Materials">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cement Bags">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tiles">
+                        </div>
+                    </div>
+                </section>
+                
+                <div class="gold-divider"></div>
+                
+                <div class="items-grid" id="materials-grid">
+                    <div class="loading">Loading quality materials...</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Contact Modal -->
+        <div id="contact-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Contact Professional</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Your Phone</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+                <div id="form-message" class="alert"></div>
+            </div>
+        </div>
+
+        <!-- Voice Assistant Button -->
+        <button class="voice-assistant" id="voice-btn">
+            <i class="fas fa-microphone"></i>
+        </button>
+
+        <!-- Footer Navigation -->
+        <footer class="footer-nav">
+            <button onclick="navigateTo('index.html')"><i class="fas fa-home"></i> Home</button>
+            <button onclick="navigateTo('explore.html')"><i class="fas fa-compass"></i> Explore</button>
+            <button onclick="navigateTo('account.html')"><i class="fas fa-user"></i> Account</button>
+            <button onclick="navigateTo('cart.html')"><i class="fas fa-shopping-cart"></i> Cart</button>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize EmailJS
+        emailjs.init("6SXFvxC9yntvDF-Ra");
+        
+        // JSON data for all categories
+        const housesData = [
+            {
+                id: 1,
+                name: "3BHK Luxury Villa",
+                price: "₹75,00,000",
+                location: "Ratibad Rd, Bhopal",
+                discount: "5% off",
+                image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "house"
+            },
+            {
+                id: 2,
+                name: "2BHK Modern Apartment",
+                price: "₹45,00,000",
+                location: "Sikandarabad, Bhopal",
+                discount: "3% off",
+                image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "house"
+            },
+            {
+                id: 3,
+                name: "4BHK Premium Duplex",
+                price: "₹95,00,000",
+                location: "Arera Colony, Bhopal",
+                discount: "7% off",
+                image: "https://images.unsplash.com/photo-1600566753052-d7f2e5625f3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "house"
+            },
+            {
+                id: 4,
+                name: "Plot with Builder Floor",
+                price: "₹62,00,000",
+                location: "Kolar Road, Bhopal",
+                discount: "2% off",
+                image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "house"
+            }
+        ];
+
+        const engineersData = [
+            {
+                id: 1,
+                name: "Rajesh Kumar",
+                experience: "15 years experience",
+                specialization: "Structural Engineering",
+                rating: "⭐ 4.8",
+                image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "engineer"
+            },
+            {
+                id: 2,
+                name: "Sneha Patel",
+                experience: "10 years experience",
+                specialization: "Civil Engineering",
+                rating: "⭐ 4.7",
+                image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "engineer"
+            },
+            {
+                id: 3,
+                name: "Amit Sharma",
+                experience: "12 years experience",
+                specialization: "Electrical Engineering",
+                rating: "⭐ 4.6",
+                image: "https://images.unsplash.com/photo-1581092921461-eab62e97a780?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "engineer"
+            },
+            {
+                id: 4,
+                name: "Priya Singh",
+                experience: "8 years experience",
+                specialization: "Plumbing & Sanitation",
+                rating: "⭐ 4.5",
+                image: "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "engineer"
+            }
+        ];
+
+        const architectsData = [
+            {
+                id: 1,
+                name: "Design Hub Architects",
+                projects: "50+ projects",
+                specialization: "Residential Designs",
+                rating: "⭐ 4.9",
+                image: "https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "architect"
+            },
+            {
+                id: 2,
+                name: "Modern Spaces",
+                projects: "35+ projects",
+                specialization: "Villa Designs",
+                rating: "⭐ 4.7",
+                image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "architect"
+            },
+            {
+                id: 3,
+                name: "Eco Design Studio",
+                projects: "40+ projects",
+                specialization: "Sustainable Architecture",
+                rating: "⭐ 4.8",
+                image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "architect"
+            },
+            {
+                id: 4,
+                name: "Urban Designers",
+                projects: "60+ projects",
+                specialization: "Commercial Buildings",
+                rating: "⭐ 4.6",
+                image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "architect"
+            }
+        ];
+
+        const materialsData = [
+            {
+                id: 1,
+                name: "UltraTech Cement",
+                price: "₹420 per bag",
+                weight: "50kg bag",
+                discount: "8% off",
+                image: "https://images.unsplash.com/photo-1582139329536-e7284fece509?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "material"
+            },
+            {
+                id: 2,
+                name: "Jindal Steel",
+                price: "₹75 per kg",
+                weight: "Grade TMT 500",
+                discount: "5% off",
+                image: "https://images.unsplash.com/photo-1578116924785-cd3c9c869c78?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "material"
+            },
+            {
+                id: 3,
+                name: "Kajaria Tiles",
+                price: "₹75 per sq.ft",
+                weight: "Ceramic Floor Tiles",
+                discount: "10% off",
+                image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "material"
+            },
+            {
+                id: 4,
+                name: "Asian Paints",
+                price: "₹650 per liter",
+                weight: "Exterior Emulsion",
+                discount: "12% off",
+                image: "https://images.unsplash.com/photo-1581837441865-eae1f7bcd4ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                type: "material"
+            }
+        ];
+
+        // Function to render items in grid
+        function renderItems(items, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-results">No items found matching your search</div>';
+                return;
+            }
+            
+            items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                
+                let detailsHtml = '';
+                
+                if (item.type === 'house') {
+                    detailsHtml = `
+                        <h3>${item.name}</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> ${item.location}</p>
+                        <p>${item.price} <span class="discount">${item.discount}</span></p>
+                    `;
+                } else if (item.type === 'engineer' || item.type === 'architect') {
+                    detailsHtml = `
+                        <h3>${item.name}</h3>
+                        <p>${item.specialization}</p>
+                        <p>${item.experience || item.projects}</p>
+                        <p class="rating">${item.rating}</p>
+                    `;
+                } else if (item.type === 'material') {
+                    detailsHtml = `
+                        <h3>${item.name}</h3>
+                        <p>${item.weight}</p>
+                        <p>${item.price} <span class="discount">${item.discount}</span></p>
+                    `;
+                }
+                
+                itemCard.innerHTML = `
+                    <div class="item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="item-details">
+                        ${detailsHtml}
+                        <div class="contact-buttons">
+                            <button class="contact-btn call-btn" onclick="callNumber('8815081605')">
+                                <i class="fas fa-phone"></i> Call Now
+                            </button>
+                            <button class="contact-btn message-btn" onclick="showContactForm('${item.name}')">
+                                <i class="fas fa-comment"></i> Message
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(itemCard);
+            });
+        }
+
+        // Initialize the page with data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render initial data
+            renderItems(housesData, 'houses-grid');
+            renderItems(engineersData, 'engineers-grid');
+            renderItems(architectsData, 'architects-grid');
+            renderItems(materialsData, 'materials-grid');
+            
+            // Set up category switching
+            const categoryButtons = document.querySelectorAll('.categories button');
+            const categoryContents = document.querySelectorAll('.category-content');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // Update active button
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected category content
+                    categoryContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${category}-content`).classList.add('active');
+                });
+            });
+            
+            // Set up search functionality
+            document.getElementById('search-btn').addEventListener('click', performSearch);
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // Set up contact form
+            document.getElementById('contact-form').addEventListener('submit', sendEmail);
+            document.querySelector('.close-modal').addEventListener('click', function() {
+                document.getElementById('contact-modal').style.display = 'none';
+            });
+            
+            // Set up voice assistant
+            document.getElementById('voice-btn').addEventListener('click', startVoiceSearch);
+            
+            // Set up user toggle
+            document.getElementById('client-btn').addEventListener('click', function() {
+                this.classList.add('active');
+                document.getElementById('partner-btn').classList.remove('active');
+            });
+            
+            document.getElementById('partner-btn').addEventListener('click', function() {
+                this.classList.add('active');
+                document.getElementById('client-btn').classList.remove('active');
+            });
+        });
+
+        // Search function
+        function performSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (!searchTerm) return;
+            
+            // Search in all categories
+            const allItems = [
+                ...housesData,
+                ...engineersData,
+                ...architectsData,
+                ...materialsData
+            ];
+            
+            const results = allItems.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) ||
+                (item.location && item.location.toLowerCase().includes(searchTerm)) ||
+                (item.specialization && item.specialization.toLowerCase().includes(searchTerm))
+            );
+            
+            // Show results in houses tab for simplicity
+            document.querySelector('[data-category="houses"]').click();
+            renderItems(results, 'houses-grid');
+        }
+
+        // Voice search function
+        function startVoiceSearch() {
+            const voiceBtn = document.getElementById('voice-btn');
+            
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Your browser doesn't support speech recognition. Please use Chrome or Edge.");
+                return;
+            }
+            
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            
+            voiceBtn.classList.add('listening');
+            
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('search-input').value = transcript;
+                voiceBtn.classList.remove('listening');
+                performSearch();
+            };
+            
+            recognition.onerror = function() {
+                voiceBtn.classList.remove('listening');
+            };
+            
+            recognition.start();
+        }
+
+        // Call function
+        function callNumber(number) {
+            window.location.href = `tel:${number}`;
+        }
+
+        // Show contact form
+        function showContactForm(professionalName) {
+            document.getElementById('contact-modal').style.display = 'flex';
+            document.getElementById('subject').value = `Inquiry about ${professionalName}`;
+        }
+
+        // Send email function
+        function sendEmail(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const formMessage = document.getElementById('form-message');
+            
+            const templateParams = {
+                name: name,
+                email: email,
+                phone: phone,
+                subject: subject,
+                message: message,
+                time: new Date().toLocaleString()
+            };
+            
+            emailjs.send('service_j7j2dkv', 'template_tjizwyb', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    formMessage.style.display = 'block';
+                    formMessage.className = 'alert alert-success';
+                    formMessage.textContent = 'Your message has been sent successfully!';
+                    
+                    // Hide message after 5 seconds
+                    setTimeout(function() {
+                        formMessage.style.display = 'none';
+                        document.getElementById('contact-modal').style.display = 'none';
+                    }, 5000);
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    formMessage.style.display = 'block';
+                    formMessage.className = 'alert alert-danger';
+                    formMessage.textContent = 'Sorry, there was an error sending your message. Please try again later.';
+                    
+                    // Hide message after 5 seconds
+                    setTimeout(function() {
+                        formMessage.style.display = 'none';
+                    }, 5000);
+                });
+        }
+
+        // Navigation function
+        function navigateTo(page) {
+            // In a real app, this would redirect to the actual page
+            alert(`Navigating to ${page}`);
+            // window.location.href = page;
+        }
+
+        // Speech synthesis (text → voice)
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = "hi-IN"; // Hindi voice
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        // Speech recognition (voice → text)
+        function listen(callback) {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Your browser doesn't support speech recognition. Please use Chrome or Edge.");
+                return;
+            }
+            
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "hi-IN"; // Hindi
+            recognition.onresult = function(event) {
+                const result = event.results[0][0].transcript;
+                callback(result);
+            };
+            recognition.start();
+        }
+
+        // Example functions
+        function startSearch() {
+            speak("आपको क्या सर्च करना है, वो बोलिए");
+            listen(function(result) {
+                alert("आपने कहा: " + result);
+                document.getElementById('search-input').value = result;
+                performSearch();
+            });
+        }
+
+        function openProfile() {
+            speak("आपकी प्रोफ़ाइल खुल रही है");
+            navigateTo('profile.html');
+        }
+
+        function openEngineering() {
+            speak("इंजीनियरिंग सेक्शन खुल रहा है");
+            document.querySelector('[data-category="engineers"]').click();
+        }
+    </script>
+</body>
+</html>
